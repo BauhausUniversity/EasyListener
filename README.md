@@ -1,16 +1,18 @@
 # EasyListener
-A simple Machine learning toolset for the Teensy Audio Library.
+A simple machine learning toolset for the Teensy Audio Library.
 
 This library does simple sound recognition with machine learning tools on the Teensy platform. 
 It is intended for use with a piezo microphone to recognize acoustic gestures on surfaces, 
 but might serve other purposes as well. 
 
+It was tested only on the Teensy 4.0.
+
 
 ## Installation
 Copy the contents of ```EasyListener``` to your Teensy Audio Library path 
 
-- on linux: ```~/Arduino/libraries```
-- on osx:   ```~/Documents/Arduino/libraries```
+- on linux:   ```~/Arduino/libraries```
+- on osx:     ```~/Documents/Arduino/libraries```
 - on windows: ```C:\Users\<User Name>\Documents\Arduino\libraries```
 
 ## How to use

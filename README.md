@@ -9,11 +9,11 @@ It was tested only on the Teensy 4.0.
 
 
 ## Installation
-Copy the contents of ```EasyListener``` to your Teensy Audio Library path 
+Copy the folder ```EasyListener``` with the C++ source files to your Arduino Library path. Its in your sketchbook/libraries folder which defaults to:
 
-- on linux:   ```~/Arduino/libraries```
-- on osx:     ```~/Documents/Arduino/libraries```
-- on windows: ```C:\Users\<User Name>\Documents\Arduino\libraries```
+- ```~/Arduino/libraries``` (linux)
+- ```~/Documents/Arduino/libraries``` (osx)
+- ```C:\Users\<User Name>\Documents\Arduino\libraries``` (windows)
 
 ## How to use
 Check out the patch in the examples folder and take note of the following explanations.

@@ -31,7 +31,8 @@ class AudioAnalyzeEasyListener : public AudioStream
 {
 public:
   AudioAnalyzeEasyListener(float loudness_threshold = -40, float envelope_decay  = 0.95, int min_length_in_blocks = 60);
-  
+  ~AudioAnalyzeEasyListener();
+
   virtual void update(void); // collect feature data for single frame, called automatically by system interupt
   
   int getSoundID(); // returns the class label of last detected sound
@@ -55,11 +56,11 @@ private:
   bool soundSnippetAvailable(); // check if new sound snipped is available
   
   audio_block_t *inputQueueArray[1];
-  FFT256F32 _fft;
+  FeatureExtractor* _featureExtractor;
   EnvelopeFollower _envelopeFollower;
   float _loudness_threshold;
   float _envelope_decay;
-  int _fft_size;
+  //int _fft_size;
   int _n_features;
   std::vector<float> _fft_sum;
   int _block_count;
@@ -75,6 +76,4 @@ private:
   KMeansN _kMeans;
   float _score;
 };
-
-
 #endif

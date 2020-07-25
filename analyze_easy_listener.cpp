@@ -18,7 +18,7 @@ AudioAnalyzeEasyListener::AudioAnalyzeEasyListener(float loudness_threshold, flo
     AudioStream(1, inputQueueArray),
     _loudness_threshold(loudness_threshold),
     _envelope_decay(envelope_decay),
-    _fft_size(256),
+    //_fft_size(256),
     _n_features(128),
     _block_count(0),
     _min_number_of_blocks(min_length_in_blocks),
@@ -35,8 +35,13 @@ AudioAnalyzeEasyListener::AudioAnalyzeEasyListener(float loudness_threshold, flo
   {
     _fft_sum.push_back(0);
   }
+  _featureExtractor = new FFT256F32();
 }
 
+AudioAnalyzeEasyListener::~AudioAnalyzeEasyListener()
+{
+  delete(_featureExtractor);
+}
 
 void AudioAnalyzeEasyListener::update(){
 
@@ -47,7 +52,7 @@ void AudioAnalyzeEasyListener::update(){
   if( !block)   return;
   
   _envelopeFollower.process(block->data);
-  _fft.process(block->data);
+  _featureExtractor->process(block->data);
 
   _new_feature_data_available = true;
   
@@ -170,7 +175,7 @@ void AudioAnalyzeEasyListener::detectSoundSnippet()
   {
     for(int i=0; i<_n_features; i++)
     {
-      _fft_sum[i]+=_fft.read(i);
+      _fft_sum[i]+=_featureExtractor->read(i);
      }
     _block_count++;
   }

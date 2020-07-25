@@ -1,0 +1,34 @@
+{
+  "name": "EasyListener",
+  "frameworks": "Arduino",
+  "platforms": "Teensy",
+  "keywords": "sound, audio, FFT, machine learning, AI, classifier, ML, recognition, KMeans, clusterer",
+  "description": "Easy Listener for Teensy Audio Library",
+  "url": "http://www.pjrc.com/teensy/td_libs_Audio.html",
+  "version": "0.2",
+  "export": {
+    "exclude": [
+      "gui",
+      "extras"
+    ]
+  },
+  "authors":
+  {
+    "name": "Clemens Wegener",
+    "maintainer": true
+  },
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/BauhausUniversity/EasyListener"
+  },
+  "dependencies":
+  {
+    "name": "Audio",
+    "frameworks": "arduino"
+  },
+  "examples": [
+    "examples/*.ino",
+    "examples/*/*.ino"
+  ]
+}

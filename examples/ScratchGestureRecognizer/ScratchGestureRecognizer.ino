@@ -12,9 +12,13 @@
  */
  /* 
   *  This example uses a piezo disc connected to the 
-  *  Teensy audio shield microphone input which acts 
-  *  as a sound gestural interface. 
+  *  Teensy audio shield microphone input, which acts 
+  *  as a sound gestural interface. You can record
+  *  scratches and taps, e.g. on your desk and recognize
+  *  them by the acoustic footprint of the structure
+  *  borne sound.
   */
+
 
 #include <Audio.h>
 #include <Wire.h>

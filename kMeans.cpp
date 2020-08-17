@@ -10,12 +10,13 @@
  *
  * BSD license
  */
-#include "KMeansN.h"
+#include "kMeans.h"
 #include <math.h>
 #include <stdlib.h> // for random function "rand"
 
-KMeansN::KMeansN(int num_of_classes, vector<PointND> &pointVec, string initializeMethod):
-_points(pointVec), _n_classes(num_of_classes), _n_dim(pointVec[0].size()), _n_points(pointVec.size()){
+KMeans::KMeans(int num_of_classes, vector<PointND> &pointVec, string initializeMethod):
+_points(pointVec), _n_classes(num_of_classes), _n_dim(pointVec[0].size()), _n_points(pointVec.size()),
+_current_class_label(-1), _current_score(0){
   /* initialize random seed: */
   //srand (time(NULL));
     
@@ -34,11 +35,12 @@ _points(pointVec), _n_classes(num_of_classes), _n_dim(pointVec[0].size()), _n_po
   }
 }
 
-KMeansN::KMeansN(){
-  
+KMeans::KMeans(){
+  _n_classes = -1;
 }
 
-void KMeansN::initialize(int num_of_classes, vector<PointND> &pointVec, string initializeMethod){
+void KMeans::initialize(int num_of_classes, vector<PointND> &pointVec, string initializeMethod)
+{
   _n_classes = num_of_classes;   
   _points = pointVec;
   _n_dim = pointVec[0].size(); 
@@ -59,31 +61,64 @@ void KMeansN::initialize(int num_of_classes, vector<PointND> &pointVec, string i
   for(int i=0; i<_n_points; i++){
     _classLabels.push_back(-1);
   }
+
 }
 
-void KMeansN::initializeWithClassLabels(int num_of_classes, vector<PointND> &pointVec, vector<int> classLabels, string initializeMethod)
+void KMeans::countNumOfClasses()
 {
-  // here we set the intial centroids to the center of the class labels that are given by the user 
-  _n_classes = num_of_classes;   
+  // count the number of unique class labels in the classLabels vector
+  _n_classes = 0;
+  for(unsigned int j=0; j<_classLabels.size(); j++)
+  {
+    bool new_class_found = true;
+    // is _classLabels[j] a new class label?
+    for(unsigned int i=0; i<j; i++)
+    {
+      if(_classLabels[j] == _classLabels[i])
+      {
+        new_class_found = false; // no, the class label is already in the database
+        break;
+      }
+    }
+    if(new_class_found) {_n_classes++;}; // yes, this is the example of a new class
+  }
+}
+void KMeans::initializeClassesAndLabels(vector<PointND> &pointVec, vector<int> classLabels) 
+{
   _points = pointVec;
   _n_dim = pointVec[0].size(); 
   _n_points = pointVec.size();
-
-  for(int i=0; i<_n_classes; i++){
-    // set to zero, they will be calculated by updateCentroids()
-    _n_class_instances.push_back(0);
-    _centroids.push_back(PointND(_n_dim));
-  }
 
   for(int i=0; i<_n_points; i++)
   {
     _classLabels.push_back(classLabels[i]);
   }
 
-  updateCentroids();
+  countNumOfClasses();
+
+  for(int i=0; i<_n_classes; i++){
+    // set to zero, they will be calculated by updateCentroids()
+    _n_class_instances.push_back(0);
+    _centroids.push_back(PointND(_n_dim));
+  }
 }
 
-void KMeansN::initializeCentroidsNaiv(){
+void KMeans::train(vector<PointND> &pointVec, vector<int> classLabels)
+{  
+  // here we set the intial centroids to the center of the class labels that are given by the user 
+  
+  initializeClassesAndLabels(pointVec, classLabels);   
+
+
+  updateCentroids();
+
+  for(int i=0; i<5; i++)
+  {    
+    clusterStep();
+  }
+}
+
+void KMeans::initializeCentroidsNaiv(){
   // initialize with random controids
   for(int i=0; i<_n_classes; i++){
     // choose the centroids at random from the set of points
@@ -93,7 +128,7 @@ void KMeansN::initializeCentroidsNaiv(){
   }
 }
 
-void KMeansN::updateCentroids()
+void KMeans::updateCentroids()
 {
   // calculate centroids
   for (int c=0; c<_n_classes; c++)
@@ -116,7 +151,7 @@ void KMeansN::updateCentroids()
   }
 }
 
-void KMeansN::assignClassLabels()
+void KMeans::assignClassLabels()
 {
   for (int p=0; p<_n_points; p++)
   {
@@ -134,13 +169,18 @@ void KMeansN::assignClassLabels()
   }
 }
 
-float KMeansN::calculateScore(PointND p, int class_label)
+float KMeans::getCurrentScore()
+{
+  return _current_score;
+}
+
+void KMeans::calculateScore(PointND p, int class_label)
 {
   int score_pickiness = 3;
   float distIntraClass = _centroids[class_label].getDistance(p);
   if (distIntraClass==0) 
   {
-    return 1;
+    _current_score = 1;
   }
   else
   {
@@ -149,14 +189,12 @@ float KMeansN::calculateScore(PointND p, int class_label)
     {
       distSumInterClass += powf(1.0/_centroids[c].getDistance(p),score_pickiness);
     }
-    float score = powf(1.0 / distIntraClass, score_pickiness) / distSumInterClass;
-    return score;
+    _current_score = powf(1.0 / distIntraClass, score_pickiness) / distSumInterClass;
   }
 }
-int KMeansN::classify(PointND p)
+void KMeans::classify(PointND p)
 {
   float min_dist = 32767;
-  int classLabel = -1;
   float dist_to_centroid = min_dist;
   
   for( int c=0; c<_n_classes; c++)
@@ -165,17 +203,18 @@ int KMeansN::classify(PointND p)
     if (dist_to_centroid < min_dist)
     {    
       min_dist = dist_to_centroid;
-      classLabel = c; 
+      _current_class_label = c; 
     }
   }
-//  if(min_dist > 100)
-//  {
-//    classLabel = min_dist;
-//  }
-  return classLabel;
+  calculateScore(p, _current_class_label);
 }
 
-void KMeansN::cluster(int n_iterations)
+int KMeans::getCurrentClassLabel()
+{
+  return _current_class_label;
+}
+
+void KMeans::cluster(int n_iterations)
 {
   for(int i=0; i<n_iterations; i++)
   {
@@ -183,24 +222,24 @@ void KMeansN::cluster(int n_iterations)
   }
 }
 
-void KMeansN::clusterStep()
+void KMeans::clusterStep()
 {
   assignClassLabels();
   updateCentroids();
 }
 
-int KMeansN::getClassLabel(int idx_to_point)
+int KMeans::getClassLabel(int idx_to_point)
 {
   return _classLabels[idx_to_point];
 }
 
-PointND KMeansN::getCentroid(int class_label)
+PointND KMeans::getCentroid(int class_label)
 {
   return _centroids[class_label];
 }
 
 
-void KMeansN::initializeCentroidsMaxSpread()
+void KMeans::initializeCentroidsMaxSpread()
 {
   // initialize with random class labels
 

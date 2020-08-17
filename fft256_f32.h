@@ -35,7 +35,7 @@ extern const int16_t AudioWindowCosine256[];
 extern const int16_t AudioWindowTukey256[];
 }
 
-class FFT256F32 : public FeatureExtractor
+class FFT256F32
 {
 public:
 	FFT256F32() : window(AudioWindowHanning256)
@@ -46,9 +46,14 @@ public:
     	arm_rfft_fast_init_f32(&_fft_inst, FFT_SIZE);
 	}
 
-	float read(unsigned int binNumber) {
+	float getBin(unsigned int binNumber) {
 		if (binNumber > 127) return 0.0;
 		return _fftMag[binNumber];
+	}
+
+	int16_t getNumOfBins() 
+	{
+		return FFT_SIZE/2;
 	}
 
 	void windowFunction(const int16_t *w) {

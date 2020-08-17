@@ -18,9 +18,12 @@ using namespace std;
 
 class PointND {
   public:
+    PointND(){};
     PointND(int dimensions);
     PointND(const  vector<float>& newN);
     PointND(const PointND&);
+
+    void push_back(float val);
     PointND operator+(const PointND& p2);
     PointND operator/(float f);
     float getDim(unsigned nth_dimension) const;

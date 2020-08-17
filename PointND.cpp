@@ -30,6 +30,11 @@ PointND::PointND(const PointND& p2){
   _pointN = p2._pointN;
 }
 
+void PointND::push_back(float val)
+{
+  _pointN.push_back(val);
+}
+
 float PointND::getDim(unsigned n_dimension) const
 {
   //assert(n_dimension<_pointN.size() && n_dimension>=0)

@@ -36,7 +36,7 @@ An envelope follower keeps track of the input loudness and enables the recording
 The code is structured into three abstract classes:
 1. EventDetector (currently implemented as envelope follower with threshold detection)
 2. FeatureExtractor (implemented as FFT averaging over the course of a detected input gesture)
-3. Classifier (implented as KMeans clusterer)
+3. Classifier (implemented as KMeans clusterer)
 
 These classes can be easily interchanged with your own code when you implement the corresponding abstract classes.
 As a starting point, look at the  "envelope_detector.h" which implements the abstract class described in "event_detector.h".

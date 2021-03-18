@@ -5,7 +5,7 @@
   "keywords": "sound, audio, FFT, machine learning, AI, classifier, ML, recognition, KMeans, clusterer",
   "description": "Easy Listener for Teensy Audio Library",
   "url": "http://www.pjrc.com/teensy/td_libs_Audio.html",
-  "version": "0.2",
+  "version": "0.3",
   "export": {
     "exclude": [
       "gui",

@@ -19,11 +19,11 @@ class FeatureExtractor
 	public:
 		virtual float getFeature(unsigned int feature_idx);
 		virtual int16_t getNumOfFeatures();
-		virtual void process(int16_t  *audio_data);
+		virtual void process(int16_t  *audio_data, uint16_t frame_num);
 		virtual bool newFeatureDataAvailable(); // check for new sound feature data
 		virtual PointND getCurrentFeatureVector();
 		virtual void setCurrentFeatureVector();
-
+        virtual uint16_t getFrameNum();
 		virtual ~FeatureExtractor(){}
 };
 #endif

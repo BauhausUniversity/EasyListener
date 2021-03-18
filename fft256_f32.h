@@ -38,16 +38,17 @@ extern const int16_t AudioWindowTukey256[];
 class FFT256F32
 {
 public:
-	FFT256F32() : window(AudioWindowHanning256)
+	FFT256F32() : outputflag(false), window(AudioWindowHanning256) //AudioWindowHanning256
 	{
-		prevdata = NULL;
+		//prevdata = NULL;
+        memset(prevdata, 0, sizeof(prevdata));
     	memset(_float_buffer, 0, sizeof(_float_buffer));
     	memset(buffer, 0, sizeof(buffer));
     	arm_rfft_fast_init_f32(&_fft_inst, FFT_SIZE);
 	}
 
 	float getBin(unsigned int binNumber) {
-		if (binNumber > 127) return 0.0;
+		if (binNumber > FFT_SIZE/2-1) return 0.0;
 		return _fftMag[binNumber];
 	}
 
@@ -59,16 +60,28 @@ public:
 	void windowFunction(const int16_t *w) {
 		window = w;
 	}
-	void process(int16_t *data);
+	void process(int16_t *data, uint16_t frame_num);
+    
+    uint16_t getFrameNum() {return _frame_num;}
+    
+    bool available() {
+        bool flag = outputflag;
+        outputflag = false;
+		return flag;
+	}
 
 	~FFT256F32(){};
 
   
 private:
+    volatile bool outputflag;
 	const int16_t *window;
-	int16_t  *prevdata;
+    uint16_t _frame_num;
+	//int16_t  *prevdata;
+    
 
 	int16_t buffer[FFT_SIZE] __attribute__ ((aligned (4)));
+    int16_t prevdata[AUDIO_BLOCK_SAMPLES] __attribute__ ((aligned (4)));
 	float32_t _float_buffer[FFT_SIZE]__attribute__((aligned(4)));
 	float32_t _fftOutput[FFT_SIZE];
 	float32_t _fftMag[FFT_SIZE];

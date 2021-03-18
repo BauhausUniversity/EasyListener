@@ -17,9 +17,13 @@ class EventDetector
 {
 	public:
 		virtual bool eventOngoing();
+        virtual bool eventOngoingAvailable();
 		virtual bool eventValid();
+        virtual bool envelopeAvailable();
 		virtual int16_t getEnvelope();
-		virtual void process(const int16_t *data);
+        virtual float getEnvelopeDB();
+		virtual void process(const int16_t *data, uint16_t frame_num);
+        virtual uint16_t getFrameNum();
 
 		virtual ~EventDetector(){}
 };

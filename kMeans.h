@@ -22,6 +22,7 @@ class KMeans : public Classifier
     KMeans();
     
     void train(vector<PointND> &pointVec, vector<int> classLabels);
+    bool classifierIsTrained(){ return _isTrained;}
     void cluster(int n_iterations);
     void clusterStep();
     int getClassLabel(int idx_to_point);
@@ -50,6 +51,7 @@ class KMeans : public Classifier
     vector<int> _n_class_instances;
     vector<int> _classLabels;
     vector<PointND> _centroids;
+    bool _isTrained;
 };
 
 #endif

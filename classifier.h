@@ -26,6 +26,7 @@ class Classifier
 	    virtual int getCurrentClassLabel();
 	    virtual float getCurrentScore();
 	    virtual int getNumberOfClasses();
+        virtual bool classifierIsTrained();
 
 		virtual ~Classifier(){}
 };

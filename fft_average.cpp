@@ -23,14 +23,16 @@ bool FFTAverage::newFeatureDataAvailable()
   return flag;
 }
 
-void FFTAverage::process(int16_t  *audio_data)
+void FFTAverage::process(int16_t  *audio_data, uint16_t frame_num)
 {  
-	_fft.process(audio_data);
+    _frame_num = frame_num;
+	_fft.process(audio_data, frame_num);
 	for(int i=0; i<_fft.getNumOfBins(); i++)
     {
       _fft_sum[i]+=_fft.getBin(i);
     }
     _new_feature_data_available = true;
+    
 }
 
 void FFTAverage::setCurrentFeatureVector()

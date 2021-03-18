@@ -21,7 +21,7 @@ using namespace std;
 class FFTAverage : public FeatureExtractor
 {
 public:
-	FFTAverage(): _new_feature_data_available(false)
+	FFTAverage(): _new_feature_data_available(false), _frame_num(0)
 	{
 		for(int i=0; i<_fft.getNumOfBins(); i++)
     	{
@@ -34,6 +34,7 @@ public:
 		return _fft_sum[feature_idx];
 	}
 
+
 	PointND getCurrentFeatureVector() {
 		return _current_feature_vector;
 	}
@@ -43,11 +44,13 @@ public:
 	int16_t getNumOfFeatures() {
 		return _fft.getNumOfBins();
 	}
-	void process(int16_t  *audio_data);
+	void process(int16_t  *audio_data, uint16_t frame_num);
 
 	void reset();
 
 	bool newFeatureDataAvailable(); // check for new sound feature data
+    
+    uint16_t getFrameNum() {return _frame_num;}
 
 
 	virtual ~FFTAverage(){}
@@ -59,6 +62,7 @@ private:
   	int _min_number_of_blocks;
   	volatile bool _new_feature_data_available;
   	PointND _current_feature_vector;
+    uint16_t _frame_num;
 
 };
 #endif

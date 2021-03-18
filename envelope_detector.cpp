@@ -13,11 +13,10 @@
 #include "envelope_detector.h"
 #include <stdlib.h>
 
-void EnvelopeDetector::process(const int16_t *data)
+void EnvelopeDetector::process(const int16_t *data, uint16_t frame_num)
 {
   if( !data) return;
-  if (_new_sound_detected) return;
-
+  
   // detect peak of buffer
   for (int i=0; i < AUDIO_BLOCK_SAMPLES; i++)
   { 
@@ -34,6 +33,11 @@ void EnvelopeDetector::process(const int16_t *data)
   else _threshold_crossed = false;
   
   _peak = _peak * _decay;
+  _frame_num = frame_num;
+  _new_env_available = true;
+  _new_threshold_crossed_available = true;
+  
+  if (_new_sound_detected) return;
 
   // detect if event is valid
   if (_threshold_crossed) _block_count++;
@@ -52,6 +56,8 @@ void EnvelopeDetector::process(const int16_t *data)
   }
   // reset
   if (!_threshold_crossed) _block_count = 0;
+  
+  
 
   
 }

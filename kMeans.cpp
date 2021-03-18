@@ -16,7 +16,7 @@
 
 KMeans::KMeans(int num_of_classes, vector<PointND> &pointVec, string initializeMethod):
 _points(pointVec), _n_classes(num_of_classes), _n_dim(pointVec[0].size()), _n_points(pointVec.size()),
-_current_class_label(-1), _current_score(0){
+_current_class_label(-1), _current_score(0),_isTrained(false) {
   /* initialize random seed: */
   //srand (time(NULL));
     
@@ -37,6 +37,7 @@ _current_class_label(-1), _current_score(0){
 
 KMeans::KMeans(){
   _n_classes = -1;
+  _isTrained = false;
 }
 
 void KMeans::initialize(int num_of_classes, vector<PointND> &pointVec, string initializeMethod)
@@ -116,6 +117,7 @@ void KMeans::train(vector<PointND> &pointVec, vector<int> classLabels)
   {    
     clusterStep();
   }
+  _isTrained = true;
 }
 
 void KMeans::initializeCentroidsNaiv(){

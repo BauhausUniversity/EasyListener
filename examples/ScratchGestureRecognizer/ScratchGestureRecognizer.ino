@@ -1,7 +1,7 @@
 /*
  * EasyListener for Teensy Audio Library
  * 
- * (c) 2020 Clemens Wegener 
+ * (c) 2021 Clemens Wegener 
  * Bauhaus-Universität Weimar
  * Department Interface Design
  *
@@ -27,9 +27,16 @@
 #include <SerialFlash.h>
 #include <analyze_easy_listener.h>
 
-float loudness_threshold = -30;
+float loudness_threshold = -45;
 float envelope_decay_rate  = 0.95; 
-int min_sound_length_in_blocks = 60;
+int min_sound_length_in_blocks = 20;
+
+String class_names[]
+{
+  "knock",
+  "scratch"
+};
+
 
 AudioInputI2S            in;
 AudioOutputI2S           out;
@@ -55,13 +62,16 @@ void setup(){
   int number_of_examples = 3;
   int number_of_classes = 2;
   
+  while(!easyListener._eventDetector->eventValid()) {} // reject first detected sound from switching on the audio codec
+  
   Serial.println("Collecting data. \nTo train the algorithm please provide example sounds!\n");
 
   for (int class_id=0; class_id<number_of_classes; class_id++)
   {
-    Serial.println("Provide "+ String(number_of_examples) + " sound examples for class " + String(class_id));
+    Serial.println("Provide "+ String(number_of_examples) + " sound examples for class " + class_names[class_id]);
     for (int i=0; i<number_of_examples; i++)
     {
+      while(!easyListener._eventDetector->eventValid()) {} // wait for minimum sound length to be detected
       easyListener.listenToExample( class_id );
       Serial.println("New sound detected!");
     }
@@ -81,7 +91,7 @@ void loop()
   {
     if(easyListener.getScore()>0.90) 
     {
-      Serial.println("Inferred class is "+ String(easyListener.getSoundID())+ ". Score: " + String(easyListener.getScore()));
+      Serial.println("Inferred sound was "+ class_names[easyListener.getSoundID()]+ ". Score: " + String(easyListener.getScore()));
     }
     else 
     {

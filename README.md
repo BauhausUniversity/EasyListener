@@ -29,6 +29,12 @@ because it analyzes the sound stream in the backgound.
 - Parameters for sound detection can be set in the constructor and have the following defaults:
 ```AudioAnalyzeEasyListener(float loudness_threshold = -30, float envelope_decay  = 0.95, int min_length_in_blocks = 60);```.
 
+### Displaying Data in Processing
+There is a patch called ```ScratchGestureRecognizerLog``` in the examples folder that sends spectral data, detection thresholds and recognition results over serial. 
+You'll find the accompanying Processing patch here:
+
+https://github.com/BauhausUniversity/EasyListenerVisualizer
+
 ## How it works
 The library currently uses the very simple approach of averaging several spectral fft frames over the course of the recorded gesture. 
 An envelope follower keeps track of the input loudness and enables the recording of features via FFT analysis. It then trains a KMeans++ classifier with the given feature vectors from the averaged FFT analysis frames. After training the classifier, EasyListener classifies newly recorded gestures and returns the most similar class label of the trained sounds.

@@ -7,6 +7,9 @@ but might serve other purposes as well.
 
 It was tested only on the Teensy 4.0.
 
+Here is a demo of the library recognizing a few acoustic gestures:
+https://vimeo.com/526066735
+
 
 ## Installation
 Copy the folder ```EasyListener``` with the C++ source files to your Arduino Library path. Its in your sketchbook/libraries folder which defaults to:

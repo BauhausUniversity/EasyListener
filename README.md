@@ -1,3 +1,6 @@
+![alt text](https://raw.githubusercontent.com/BauhausUniversity/EasyListener/master/EasyListener_Demo.png)
+
+
 # EasyListener
 A simple and easily extendable machine learning toolset for the Teensy Audio Library.
 

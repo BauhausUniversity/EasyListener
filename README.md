@@ -51,7 +51,7 @@ The code is structured into three abstract classes:
 3. Classifier (implemented as KMeans clusterer)
 
 These classes can be easily interchanged with your own code when you implement the corresponding abstract classes.
-As a starting point, look at the  "envelope_detector.h" which implements the abstract class described in "event_detector.h".
+As a starting point, look at the  "examples/SpectralCentroid/spectral_centroid.h" which implements the abstract class described in "feature_extractor.h". To see how you can use your own classes in a patch which overide the default classes look at the corresponding arduino file "examples/SpectralCentroid/spectral_centroid.ino"
 
 ## Notes
 The magnitude resolution of the standard FFT algorithm in the Teensy Audio library proved to be not sufficient for high frequencies and low magnitude sounds. Therefore this library uses the higher resolution 32 bit floating point FFT from CMISIS-DSP. 
